@@ -78,7 +78,7 @@
 2. Implement an admin vs user mode
 3. Better error messages
 4. More restrictions on amount of drinks
-5. Be option menus
+5. Better user interactions in stocks and credits
 
 ## Conclusion:
 This project help me with
