@@ -21,10 +21,9 @@ class Stocks:
                 if price == self._instock[soda]["price"]:
                     print(f"\n{soda} is already R{price}, please set a different price.")
                     return
-                # Adds drink to stocks if all is good,
-                else:
-                    self._instock[drink]= {"price" : price, "amount" : 1}
-                    print(f"\n{drink} has been added!")
+            # Adds drink to stocks if all is good,
+            self._instock[drink]= {"price" : price, "amount" : 1}
+            print(f"\n{drink} has been added!")
 
         # Adds drink to stocks if stock is not empty,
         else:
@@ -39,7 +38,6 @@ class Stocks:
             if self._instock[drink]["amount"] <= 0: 
                 self._instock.pop(drink)
                 return True
-                print(f"\n{drink} has been removed. None left.")
             else:
                 return True
 
@@ -144,11 +142,6 @@ class Credits:
         else:
             return False
         
-    def refund(self, price:float):
-        # Gives the buyer his/her refund for the drink
-        self.increase_credits(price)
-        print("\nRefund successful!")
-    
     def __str__(self):
         # String representation of Credits.
         return f"R {self._totalamount}"
@@ -168,9 +161,13 @@ class VendingMachine:
         return None
 
     def add_to_available(self, drink:str):
-        if drink not in self._available:
+        if len(self._available) == 0:
+            self._available[drink] = "D1"
+
+        elif drink not in self._available:
             # Adds drink's respective item number.
-            no = len(self._available) + 1
+            last_drink = next(reversed(self._available))
+            no = int(self._available[last_drink][1:]) + 1
             self._available[drink] = f"D{no}"
 
     def remove_from_available(self, drink:str):
@@ -382,24 +379,20 @@ class VendingMachine:
         while True:
             print("\n1. Check bought drink(s)")
             print("2. Buy drink")
-            print("3. Get refund")
-            print("4. Return to main menu")
+            print("3. Return to main menu")
             option = input("Pick an option : ")
 
             if option == "1":
                 # Checks what drinks where bought if option 1 is choosen.
                 print("\nBought drinks :")
-                self._bought
+                for drink in self._bought:
+                    print(f"\n{drink}")
 
             elif option == "2":
-                # Buys drinks if option 1 is choosen.
+                # Buys drinks if option 2 is choosen.
                 self.buying_drinks()
 
             elif option == "3":
-                # gets refund if option 1 is choosen.
-                self.get_refund()
-
-            elif option == "4":
                 break
 
             else: 
@@ -442,25 +435,6 @@ class VendingMachine:
             else:
                 continue
 
-    def get_refund(self):
-        # Checks if there are any drinks for refund.
-        if len(self._bought) == 0:
-            print("\nNo drinks were bought.")
-
-        else:
-            # Returns eveerything to it's rightful place
-            drink = self._bought.pop()
-            self._stock.add_drink(drink)
-            self.add_to_available(drink)
-
-            before = self._current_credits.balance()
-            amount = self._stock.items()[drink]["price"]
-
-            self._current_credits.refund(amount)
-            if round(before, 2) + round(amount, 2) == self._current_credits.balance():
-                print("\nRefund successfull!")
-
-            print("\nRefund unsuccessfull...")
 
 def show_menu():
     print("\n==== MENU ====")
